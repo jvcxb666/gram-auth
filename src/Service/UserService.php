@@ -26,7 +26,7 @@ class UserService
         if((empty($data['name']) && empty($data['password'])) || (empty($data['email']) && empty($data['password']))) return ['result'=>false];
 
         $id = $this->getIdByUsernameOrEmail($data['name']??null, $data['email']??null);
-        $user = $this->repo->find($id);
+        $user = $this->repo->find($id ?? 0);
         if(empty($user)) return ['result'=>false];
         
         return ['result'=>$this->hasher->verify($user->getPassword(),$data['password']),'user'=>$user->getId()];
