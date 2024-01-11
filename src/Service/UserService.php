@@ -35,6 +35,7 @@ class UserService
     public function save(?array $data): ?array
     {
         if(empty($data['name']) || empty($data['email']) || empty($data['password'])) ['error'=>'Empty data passed in'];
+        $new = false;
 
         if(!empty($data['id'])){
             $object = $this->repo->find($data['id']);
@@ -45,12 +46,13 @@ class UserService
             if(!empty($this->getIdByUsernameOrEmail($data['name'],$data['email']))) return ['error'=>'Email or username is already taken'];
             $object = new User($data['name'],$data['email'],$this->hasher->hash($data['password']));
             $object->setImage($data['image'] ?? null);
+            $new = true;
         }
 
         $this->em->persist($object);
         $this->em->flush();
 
-        return ['user'=>$object->getId()];
+        return ['user'=>$object->getId(),'new' => $new];
     }
 
     public function delete(?int $id): void
