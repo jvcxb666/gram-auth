@@ -21,6 +21,14 @@ class UserService
         $this->repo = $this->em->getRepository(User::class);        
     }
 
+    public function findUser(array $data): array
+    {
+        $object = $this->repo->findOneBy($data);
+
+        if(empty($object)) return ['error'=>'User not found'];
+        return ["user"=>$object];
+    }
+
     public function validateLogin(?array $data): ?array
     {
         if((empty($data['name']) && empty($data['password'])) || (empty($data['email']) && empty($data['password']))) return ['result'=>false];

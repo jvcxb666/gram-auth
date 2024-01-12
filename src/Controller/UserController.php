@@ -17,6 +17,24 @@ class UserController extends AbstractController
         $this->service = $userService;
     }
 
+    #[Route('/getUser/', name: 'user_find', methods:'POST')]
+    public function get(Request $request): JsonResponse
+    {
+        try{
+            $data = [];
+            parse_str($request->getContent(),$data);
+            $result = $this->service->findUser($data);
+        }catch(\Exception $e){
+            $result = 
+            [
+                'error' => "Internal server error",
+                'message' => $e->getMessage(),
+            ];
+        }
+
+        return $this->json($result);
+    }
+
     #[Route('/login/', name: 'user_login', methods:'POST')]
     public function index(Request $request): JsonResponse
     {
