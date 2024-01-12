@@ -26,7 +26,7 @@ class UserService
         $object = $this->repo->findOneBy($data);
 
         if(empty($object)) return ['error'=>'User not found'];
-        return ["user"=>$object];
+        return ["object"=>$object];
     }
 
     public function validateLogin(?array $data): ?array
