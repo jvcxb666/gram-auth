@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Service\Interface\UserServiceInterface;
+use App\Service\Logic\UserInfoService;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -10,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    private UserService $service;
+    private UserServiceInterface $service;
 
     public function __construct(UserService $userService)
     {
@@ -23,6 +25,10 @@ class UserController extends AbstractController
         try{
             $data = [];
             parse_str($request->getContent(),$data);
+            if(!empty($data['with_info']) && $data['with_info'] == true){
+                $this->service = new UserInfoService($this->service);
+                unset($data['with_info']);
+            }
             $result = $this->service->findUser($data);
         }catch(\Exception $e){
             $result = 

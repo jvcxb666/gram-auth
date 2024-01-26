@@ -3,12 +3,13 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Service\Interface\UserServiceInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
-class UserService
+class UserService implements UserServiceInterface
 {
     private EntityManagerInterface $em;
     private ServiceEntityRepository $repo;
@@ -63,13 +64,15 @@ class UserService
         return ['user'=>$object->getId(),'new' => $new];
     }
 
-    public function delete(?int $id): void
+    public function delete(?int $id): ?array
     {
-        if(empty($id)) return;
+        if(empty($id)) return null;
         $object = $this->repo->find($id);
 
         $this->em->remove($object);
         $this->em->flush();
+
+        return null;
     }
 
     private function getIdByUsernameOrEmail(?string $name = null, ?string $email = null): ?int
