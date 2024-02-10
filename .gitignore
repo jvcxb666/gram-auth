@@ -1,6 +1,6 @@
 
 ###> symfony/framework-bundle ###
-.evn
+.env
 /.env.local
 /.env.local.php
 /.env.*.local
